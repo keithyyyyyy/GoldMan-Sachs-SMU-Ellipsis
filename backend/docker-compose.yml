@@ -1,0 +1,35 @@
+
+version: '3'
+services:
+  api:
+    image: sample-express-app
+    build: .
+    networks:
+      - backend
+    ports:
+      - "3001:3001"
+
+  creditScoring:
+    image: credit-scoring-service
+    build:
+      context: .
+      dockerfile: dockerfiles/creditScoring.Dockerfile
+    env_file:
+      - .env
+    networks: 
+      - backend
+    container_name: credit-scoring-service
+    ports:
+      - "5001:5001"
+    depends_on:
+      - api
+
+  # web-cli:
+  #   image: Goldman-Sachs-Hackathon-API
+  #   networks:
+  #     - backend
+  #   command: sh
+
+networks:
+  backend:
+    driver: bridge
